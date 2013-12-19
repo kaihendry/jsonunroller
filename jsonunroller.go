@@ -46,6 +46,7 @@ const postForm = `
 <div><textarea style="box-sizing: border-box; height: 60%; width: 100%;" name="content"></textarea></div>
 <div><input type="submit"></div>
 <pre>curl -d 'content={ "foo": "bar" }' http://jsonunroller.appspot.com/unroll<pre>
+<p><a href=https://github.com/kaihendry/GAE-jsonunroller>MIT source code</a></p>
 </form>
 </body>
 </html>
