@@ -63,6 +63,7 @@ func root(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	client := urlfetch.Client(c)
 	res, err := client.Get(pu.String())
+	defer res.Body.Close()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -80,7 +81,6 @@ func root(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	// res.Body.Close()
 
 	var pj interface{}
 	err = json.Unmarshal([]byte(j), &pj)
