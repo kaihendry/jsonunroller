@@ -38,22 +38,30 @@ func dumpobj(prefix string, x interface{}) string {
 func (s *server) index() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		t, err := template.New("index").Parse(`
+		t, err := template.New("index").Parse(`<!DOCTYPE html>
 <html>
 <head>
 <title>JSON unroller</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="icon" href="data:,">
+<style>
+textarea {
+  width: 100%;
+  height: 50vh;
+}
+</style>
 </head>
 <body>
-</form>
 <form action="/unroll" method="post">
-<textarea style="box-sizing: border-box; height: 60%; width: 100%;" name="content"></textarea>
+<p>
+<textarea required name="content"></textarea>
 <p>
 <input type="submit">
-<pre>curl --data-urlencode content@foobar.json https://jsonunroller.dabase.com/unroll<pre>
-<p><a href=https://github.com/kaihendry/jsonunroller>MIT source code</a></p>
 </form>
+<p>
+<pre>curl --data-urlencode content@foobar.json https://jsonunroller.dabase.com/unroll</pre>
+<p>
+<a href=https://github.com/kaihendry/jsonunroller>MIT source code</a>
 </body>
 </html>`)
 		if err != nil {
@@ -79,6 +87,8 @@ func (s *server) unroll() http.HandlerFunc {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 			return
 		}
+
+		r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
 
 		f := r.FormValue("content")
 		if f == "" {
